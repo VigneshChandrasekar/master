@@ -1,0 +1,91 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>iMDb</title>
+    <link rel="icon" href="~/Images/Icons/imdb.jpg">
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />  
+    <link href="@Url.Content("~/Styles/Common.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />    
+    <link href="~/BannerControlTemplates/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>    
+    <link href="~/BannerControlTemplates/css/full-slider.css" rel="stylesheet" />    
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body style="background-color:dimgrey;">
+
+    <div id="banner">
+
+    </div>
+
+    <div style="height:15px;">
+
+    </div>
+    <div class="container">
+        <div class="row divPaging">
+            <div class="col-lg-12"><span>List of Movies</span></div>
+        </div>
+    </div>
+    <div style="height:15px;">
+
+    </div>
+    <div id="listMoviesDiv">
+
+    </div>
+   
+    <div style="height:15px;">
+
+    </div>
+    <div class="container">
+        <div class="row">        
+            <table>
+                <tr>
+                    @for (int pageNum = 1; pageNum <= @ViewBag.PageCount; pageNum++)
+                    {
+                        <td><button onclick="GoToNextDiv(@pageNum);" class="divPageButtons">@pageNum</button></td>                       
+                    }                    
+                </tr>
+            </table>                
+        </div>
+    </div> 
+    <div class="modal-footer">        
+    </div>  
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/BannerControlTemplates/vendor/jquery/jquery.min.js"></script>
+    <script src="~/BannerControlTemplates/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">    
+    var pageNum = 1;    
+    $(document).ready(function () {
+        debugger;
+        $("#banner").load("BannerControl?pageNum=" + pageNum);
+        $("#listMoviesDiv").load("ListingMoviesTemplate?pageNum=" + pageNum);        
+        
+    });    
+    function ChangeText(oFileInput, sTargetID) {
+
+        if (oFileInput.value != null)
+            document.getElementById(sTargetID).value = oFileInput.value;
+    }
+ 
+    function GoToNextDiv(pageNum) {
+        debugger;
+        $("#banner").load("BannerControl?pageNum=" + pageNum);
+        $("#listMoviesDiv").load("ListingMoviesTemplate?pageNum=" + pageNum);                
+    }
+
+</script>

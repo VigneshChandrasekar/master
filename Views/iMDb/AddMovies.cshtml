@@ -1,0 +1,683 @@
+﻿@model ICDB.Models.AddMovie
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add Movie</title>
+    <link rel="icon" href="~/Images/Icons/imdb.jpg">
+    @Styles.Render("~/Content/css")
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/BannerControlTemplates/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Styles/Common.css")" media="screen" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/bundles/jquery")
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+    <script src="~/Scripts/AngularJs/angularjs-dropdown-multiselect.js"></script>
+    <script src="~/Scripts/AngularJs/MyApp.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    <style type="text/css">
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .checkbox {
+            margin: 0px;
+            padding-top: 0px;
+        }
+
+        .dropdown-menu {
+            overflow: auto !important;
+            text-align: center;
+            font-size: 12px;
+            width: 265px;
+        }
+
+        .btn-group > .btn:first-child {
+            width: 265px;
+        }
+
+        select#ProductID.btn.btn-default {
+            width: 265px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 300;
+        }
+
+        p {
+            color: #999;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        #wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .page-head-image {
+        }
+
+            .page-head-image img {
+                border-radius: 50%;
+            }
+
+        #form-trabalhe {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: normal;
+            margin-top: 15px;
+        }
+
+        input {
+            border: 2px solid #CCC !important;
+            height: 35px;
+            border-radius: 3px;
+            max-width: 100%;
+        }
+
+        .input-group-addon {
+            border: 2px solid #CCC !important;
+            border-right: 0px !important;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 3px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        .form-control {
+            font-size: 13px;
+        }
+
+        .form_hint {
+            background: #d45252;
+            border-radius: 3px 3px 3px 3px;
+            color: white;
+            margin-left: 8px;
+            padding: 1px 6px;
+            z-index: 999; /* hints stay above all other elements */
+            position: absolute; /* allows proper formatting if hint is two lines */
+            display: none;
+        }
+
+            .form_hint::before {
+                content: "\25C0"; /* left point triangle in escaped unicode */
+                color: #d45252;
+                position: absolute;
+                top: 1px;
+                left: -6px;
+            }
+
+        input:focus + .form_hint {
+            display: inline;
+        }
+
+        input:required:valid + .form_hint {
+            background: #28921f;
+        }
+            /* change form hint color when valid */
+            input:required:valid + .form_hint::before {
+                color: #28921f;
+            }
+        /* change form hint arrow color when valid */
+    </style>
+    <script>
+        $(document).ready(function () {
+            debugger;
+            $("#MovieName").change(function () {
+                var movieName = $("#MovieName").val();
+                if (movieName.length == 0) {
+                    $("#snMovieName").show();
+                }
+                else {
+                    $("#snMovieName").hide();
+                }                
+            });
+            $("#Plot").change(function () {
+                var plot = $("#Plot").val();
+                if (plot.length == 0) {
+                    $("#snPlot").show();
+                }
+                else {
+                    $("#snPlot").hide();
+                }
+            });
+            $("#ReleaseDate").change(function () {
+                var releaseDate = $("#ReleaseDate").val();
+                if (releaseDate < 1950) {
+                    $("#snReleaseDate").show();
+                }
+                else {
+                    $("#snReleaseDate").hide();
+                }
+            });
+            
+            $("#btnAddMovieInfo").click(function () {
+                debugger;
+                $("#hdnBtnTrigger").click();                
+                var movieName = $("#MovieName").val();
+                var plot = $("#Plot").val();
+                var releaseDate = $("#ReleaseDate").val();
+                var hdnActorText = $("#hdnActorText").val();
+                var hdnMCText = $("#hdnMCText").val();
+                var hdnDirectorText = $("#hdnDirectorText").val();
+                var ddlProducerID = $("#ProducerID option:selected").val()
+                if (movieName.length == 0) {                    
+                    $("#snMovieName").text("Please fill out this field.");
+                    $("#snMovieName").show();
+                }
+                else {                    
+                    if (plot.length == 0) {
+                        $("#snPlot").text("Please fill out this field.");
+                        $("#snPlot").show();
+                    }
+                    else {
+                        if (releaseDate < 1950) {
+                            $("#snReleaseDate").text("Please format like 2000.");
+                            $("#snReleaseDate").show();
+                        }
+                        else {
+                            if (hdnActorText.length == 0) {
+                                $("#snhdnActorText").show();                                
+                            }
+                            else {
+                                $("#snhdnActorText").hide();
+                                if (hdnMCText.length == 0) {
+                                    $("#snhdnMCText").show();
+                                }
+                                else {
+                                    $("#snhdnMCText").hide();
+                                    if (hdnDirectorText.length == 0) {
+                                        $("#snhdnDirectorText").show();
+                                    }
+                                    else {
+                                        $("#snhdnDirectorText").hide();
+                                        if (ddlProducerID == 0) {
+                                            $("#snProducerText").show();
+                                        }
+                                        else {
+                                            $("#snProducerText").hide();
+                                            var posterPath = $("#txtPosterPath").val;
+                                            var xhr = new XMLHttpRequest();
+                                            var fd = new FormData();
+                                            fd.append("file", document.getElementById('imgFile').files[0]);
+                                            fd.append("movieName", movieName);
+                                            fd.append("plot", plot);
+                                            fd.append("releaseDate", releaseDate);
+                                            fd.append("posterPath", posterPath);
+                                            fd.append("actorID", hdnActorText);
+                                            fd.append("directorID", hdnDirectorText);
+                                            fd.append("musicDirectorID", hdnMCText);
+                                            fd.append("producerID", ddlProducerID);
+                                            xhr.open("POST", "/iMDb/SaveMovieInfo/", true);
+                                            xhr.send(fd);
+                                            xhr.addEventListener("load", function (event) {
+                                                alert(event.target.response);
+                                            }, false);
+                                        }                                        
+                                    }                                    
+                                }                                
+                            }                            
+                        }                        
+                    }                    
+                }                
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function ShowModal() {
+            debugger;
+
+        }
+        function ChangeText(oFileInput, sTargetID) {
+
+            if (oFileInput.value != null)
+                document.getElementById(sTargetID).value = oFileInput.value;
+        }
+        function SaveInfo(state) {
+            debugger;
+            var actorName = $("#txtName").val();
+            var actorGender = $("#txtGender").val();
+            var actorDOB = $("#txtDateOfBirth").val();
+            var actorBio = $("#txtBio").val();
+
+            var pName = $("#txtProducerName").val();
+            var pGender = $("#txtProducerGender").val();
+            var pDOB = $("#txtProducerDateOfBirth").val();
+            var pBio = $("#txtProducerBio").val();
+
+            var mcName = $("#txtMCName").val();
+            var mcGender = $("#txtMCGender").val();
+            var mcDOB = $("#txtMCDateOfBirth").val();
+            var mcBio = $("#txtMCBio").val();
+
+            var dName = $("#txtDirectorName").val();
+            var dGender = $("#txtDirectorGender").val();
+            var dDOB = $("#txtDirectorDateOfBirth").val();
+            var dBio = $("#txtDirectorBio").val();
+            var requestedData = { state: state, actorName: actorName, actorGender: actorGender, actorDOB: actorDOB, actorBio: actorBio, pName: pName, pGender: pGender, pDOB: pDOB, pBio: pBio, mcName: mcName, mcGender: mcGender, mcDOB: mcDOB, mcBio: mcBio, dName: dName, dGender: dGender, dDOB: dDOB, dBio: dBio };
+            $.ajax({
+                url: '/iMDb/AddCastAndCrew',
+                type: 'POST',
+                data: JSON.stringify(requestedData),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                error: function (result) {
+                    debugger;
+                    alert('Error');
+                },
+                success: function (data) {
+                    debugger;
+                    alert(data);
+                },
+                async: true,
+                processData: false
+            });
+        }        
+    </script>
+</head>
+<body style="background-color:dimgrey;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="~/iMDb/Index"><img src="~/Images/Icons/imdb.jpg" width="100" height="50" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/iMDb/Index">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+
+                    </li>
+                    <li class="nav item active">
+                        <a class="nav-link" href="~/iMDb/AddMovies">
+                            Add Movie
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="wrapper" class="container" style="background-color:lightgray;border:outset;" ng-app="MyApp" ng-controller="multiselectdropdown">
+
+        <figure class="page-head-image">
+            <img src="~/Images/Movies.jpg" style="max-height:150px;max-width:250px;" />
+        </figure>
+
+        <h2>Please fill out the details here...</h2>
+
+        <form id="form-work" class="" name="form-work" ng-submit="SubmitData()">
+
+            <fieldset>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.MovieName, "Movie Name", new { @class = "control-label", @for = "name" })
+                        @Html.TextBoxFor(model => model.MovieName, new { @class = "form-control", @placeholder = "Movie Name is...", @type = "text"})
+                        <span class="form_hint"id="snMovieName">NAME OF THE MOVIE...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Plot, "Plot", new { @class = "control-label", @for = "name" })
+                        @Html.TextAreaFor(model => model.Plot, new { @class = "form-control", @type = "text", @row = 4 })
+                        <span class="form_hint" id="snPlot">PLOT IS HERE...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Poster, "Poster", new { @class = "control-label", @for = "name" })
+                        <input class="form-control" id="txtPosterPath" placeholder="Please Choose the poster image" type="text">
+                        <img id="btnUploadFile" style="width:25px;height:25px;" src="~/Images/Icons/Folder-Searches.png" onclick="javascript: document.getElementById('imgFile').click();" />
+                        <input id="imgFile" style="visibility:hidden;" type="file" name="img" value="" onclick="ChangeText(this, 'txtPosterPath');" required>                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.ReleaseDate, "Release Date", new { @class = "control-label", @for = "text" })
+                        @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "form-control", @type = "text", placeholder = "2000" })
+                        <span class="form_hint" id="snReleaseDate">FORMAT SHOULD BE LIKE "2000"</span>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div ng-dropdown-multiselect="" extra-settings="dropdownSetting"
+                                 options="Actors" selected-model="ActorsSelected" checkboxes="true">
+                            </div>                            
+                            <input type="text" ng-model="hdnActorText" id="hdnActorText" style="visibility:hidden;">
+                            <span class="form_hint" id="snhdnActorText">Please select the actor</span>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalOne"> + Add Actor</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(
+                        x => x.ProducerID,
+                        new SelectList(Model.iProducers, "ProducerID", "ProducerName"),
+                        "-- Please select --", new { @class = "btn btn-default" }
+                        )
+                            <span class="form_hint" id="snProducerText">Please select the producer</span>                            
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalTwo"> + Add Producer</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div ng-dropdown-multiselect="" extra-settings="dropdownSetting"
+                                 options="MusicDirectors" selected-model="MusicDirectorsSelected" checkboxes="true">
+                            </div>
+                            <input type="text" ng-model="hdnMCText" id="hdnMCText" style="visibility:hidden;">
+                            <span class="form_hint" id="snhdnMCText">Please select the music director</span>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalThree"> + Add Music Director</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div ng-dropdown-multiselect="" extra-settings="dropdownSetting"
+                                 options="Directors" selected-model="DirectorsSelected" checkboxes="true">
+                            </div>
+                            <input type="text" ng-model="hdnDirectorText" id="hdnDirectorText" style="visibility:hidden;">
+                            <span class="form_hint" id="snhdnDirectorText">Please select the director</span>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalFour"> + Add Director</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-lg btn-block info" id="btnAddMovieInfo">Save</button>
+                        <button type="submit" id="hdnBtnTrigger" ng-click="SubmitData()" style="visibility:hidden;">Trigger Event</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div>
+        <!-- Modal -->
+        <div id="ModalOne" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="left:0%;margin-top:215px;right:0%;">
+                <!-- Modal content-->
+                <div class="modal-content" style="position:relative;">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Actor</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Name", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="txtName" class="form-control" placeholder="Actor" required />
+                                <span class="form_hint">NAME OF THE ACTOR...</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Sex", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <select id="txtGender" name="Gender" class="form-control" required>
+                                    <option label="--Select--"></option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Date Of Birth", new { @class = "control-label", @for = "date" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="date" id="txtDateOfBirth" class="form-control" required/>
+                                <span class="form_hint">DOB IS HERE...</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Bio", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextArea("txtBio", new { @class = "form-control", @type = "text" })    
+                                <span class="form_hint">ACTOR's BIO...</span>                       
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnAddActor" onclick="SaveInfo(1);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="ModalTwo" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="left:0%;margin-top:215px;right:0%;">
+                <!-- Modal content-->
+                <div class="modal-content" style="position:relative;">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Producer</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Name", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="txtProducerName" class="form-control" placeholder="Producer" required/>
+                                <span class="form_hint">NAME OF THE PRODUCER...</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Sex", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <select id="txtProducerGender" name="Gender" class="form-control" required>
+                                    <option label="--Select--"></option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Date Of Birth", new { @class = "control-label", @for = "date" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="date" id="txtProducerDateOfBirth" class="form-control" required/>
+                                <span class="form_hint">DOB IS HERE...</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Bio", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextArea("txtProducerBio", new { @class = "form-control", @type = "text" })
+                                <span class="form_hint">PRODUCER's BIO...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnAddProducer" onclick="SaveInfo(2);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ModalThree" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="left:0%;margin-top:215px;right:0%;">
+                <!-- Modal content-->
+                <div class="modal-content" style="position:relative;">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Music Director</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Name", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="txtMCName" class="form-control" placeholder="Music Director" required/>
+                                <span class="form_hint">NAME OF THE MUSIC DIRECTOR...</span>                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Sex", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <select id="txtMCGender" name="Gender" class="form-control" required>
+                                    <option label="--Select--"></option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Date Of Birth", new { @class = "control-label", @for = "date" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="date" id="txtMCDateOfBirth" class="form-control" required/>
+                                <span class="form_hint">DOB IS HERE...</span>                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Bio", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextArea("txtMCBio", new { @class = "form-control", @type = "text" })
+                                <span class="form_hint">MUSIC DIRECTOR's BIO...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnAddMC" onclick="SaveInfo(3);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ModalFour" class="modal fade" role="dialog">
+            <div class="modal-dialog" style="left:0%;margin-top:215px;right:0%;">
+                <!-- Modal content-->
+                <div class="modal-content" style="position:relative;">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Director</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Name", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="txtDirectorName" class="form-control" placeholder="Director" required/>
+                                <span class="form_hint">NAME OF THE DIRECTOR...</span>                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Sex", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                <select id="txtDirectorGender" name="Gender" class="form-control" required>
+                                    <option label="--Select--"></option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Date Of Birth", new { @class = "control-label", @for = "date" })
+                            </div>
+                            <div class="col-md-12">
+                                <input type="date" id="txtDirectorDateOfBirth" class="form-control" required/>
+                                <span class="form_hint">DOB IS HERE...</span>                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.Label("Bio", new { @class = "control-label", @for = "name" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextArea("txtDirectorBio", new { @class = "form-control", @type = "text" })
+                                <span class="form_hint">DIRECTOR's BIO...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnAddDirector" onclick="SaveInfo(4);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

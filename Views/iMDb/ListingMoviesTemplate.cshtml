@@ -1,0 +1,191 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Full Slider - Start Bootstrap Template</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+    <link href="~/BannerControlTemplates/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/BannerControlTemplates/css/full-slider.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Styles/Common.css")" media="screen" rel="stylesheet" type="text/css" />    
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    @*<script src="~/BannerControlTemplates/vendor/jquery/jquery.min.js"></script>*@
+    <script src="~/BannerControlTemplates/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            debugger;
+            $("#btnShow").click(function () {
+                debugger;
+                $("#dialog-modal2").dialog({
+                    width: 'auto',
+                    modal: true
+                });
+            });
+            $("#btnSaveMovieInfo").click(function () {
+                debugger;
+                var hdnMovieID = document.getElementById('hdnMovieID').value;
+                var movieName = document.getElementById('txtMovieName').value;
+                var releaseDate = document.getElementById('txtReleaseDate').value;
+                var posterPath = document.getElementById('txtPosterPath').value;
+                var plot = document.getElementById('txtPlot').value;
+                var xhr = new XMLHttpRequest();
+                var fd = new FormData();
+                fd.append("file", document.getElementById('imgFile').files[0]);
+                fd.append("movieID", hdnMovieID);
+                fd.append("movieName", movieName);
+                fd.append("releaseDate", releaseDate);
+                fd.append("plot", plot);
+                fd.append("posterPath", posterPath);
+                xhr.open("POST", "/iMDb/UploadFile/", true);
+                xhr.send(fd);
+                xhr.addEventListener("load", function (event) {
+                    $("#dialog-modal2").dialog({
+                        width: 'auto',
+                        modal: true
+                    });                    
+                    alert(event.target.response);
+                }, false);              
+            });
+            
+        });
+        function EditMovieInfo(id) {
+            debugger;
+            var requestedData = { id: id };
+            $.ajax({
+                url: '/iMDb/GetMovieInfoByID',
+                type: 'POST',
+                data: JSON.stringify(requestedData),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                error: function (result) {
+                    debugger;
+                    alert('Error');
+                },
+                success: function (data) {
+                    debugger;
+                    $('#txtMovieName').val(data["Name"]);
+                    $('#txtReleaseDate').val(data["Release_Date"]);
+                    $('#txtPlot').val(data["Plot"]);
+                    $('#txtPosterPath').val(data["PosterPath"]);
+                    $('#hdnMovieID').val(data["ID"]);
+                    $("#btnShow").click();
+                },
+                async: true,
+                processData: false
+            });
+        }
+        
+        
+        function RenderVideos() {
+            debugger;
+            document.getElementById('hdnVideoImageTag').style.display = 'none';
+            document.getElementById('Video').src = "https://www.youtube.com/embed/XGSy3_Czz8k";
+            document.getElementById('hdnVideoTag').style.display = 'block';
+        }
+        function ChangeText(oFileInput, sTargetID) {
+
+            if (oFileInput.value != null)
+                document.getElementById(sTargetID).value = oFileInput.value;
+        }
+
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        @model List<ICDB.Entities.GetMovieInfo_vw>
+        <button id="btnShow" style="display:none;">Show</button>
+        <div class="row" >
+            @foreach (var item in Model)
+            {
+                var movieID = @item.MovieID.ToString();
+                <div class="col-lg-6 divList" id="@item.MovieID">
+                    <div id="primaryDiv" class="row">
+                        <div class="col-lg-4">
+                            <img src="@ViewData[movieID]" class="movieTag" onclick="RenderVideos();" />
+                        </div>
+                        <div class="col-lg-8">
+                            <br />
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Name</span></div>
+                                <div class="col-lg-8">@item.MovieName</div>
+                            </div>
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Year</span></div>
+                                <div class="col-lg-8">@item.Release_Date</div>
+                            </div>
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Actors</span></div>
+                                <div class="col-lg-8">@item.ActorName</div>
+                            </div>
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Director</span></div>
+                                <div class="col-lg-8">@item.DirectorName</div>
+                            </div>
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Music Director</span></div>
+                                <div class="col-lg-8">@item.MusicDirectorName</div>
+                            </div>
+                            <div class="row divMovieGrid">
+                                <div class="col-lg-4"><span>Producer</span></div>
+                                <div class="col-lg-8">@item.ProducerName</div>
+                            </div>
+                            <div class="row">
+                                <a class="btn btn-primary btnEdit" data-toggle="modal" onclick="EditMovieInfo(@item.MovieID);" style="background-color:white;color:black;">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    
+        <div class="container contact_form" id="dialog-modal2" name="contact-form" style="width:auto;height:auto;display:none;">
+            @Html.Hidden("hdnMovieID")
+            <ul>
+                <li>
+                    <h2>Edit Movie Data</h2>
+                    <span class="required_notification">* Denotes Required Field</span>
+                </li>
+                <li>
+                    <label for="name">Movie Name:</label>                    
+                    <input type="text" name="name" id="txtMovieName" required />
+                    <span class="form_hint">NAME OF THE MOVIE...</span>
+                </li>
+                <li>
+                    <label for="number" type="number">Released Year</label>
+                    <input type="number" name="number" id="txtReleaseDate" required />
+                    <span class="form_hint">PLEASE FORMAT LIKE "2000"</span>
+                </li>
+                <li>
+                    <label for="message">Plot</label>
+                    <textarea name="message" cols="40" id="txtPlot" rows="6"></textarea>                                       
+                </li>
+                <li>
+                    <label for="text">Poster Path</label>
+                    <input id="txtPosterPath" name="text" class="tb7" type="text" value="Choose File"> 
+                    <img id="btnUploadFile" style="width:25px;height:25px;" src="~/Images/Icons/Folder-Searches.png" onclick="javascript: document.getElementById('imgFile').click();" />                   
+                    <input id="imgFile" style="visibility:hidden;" type="file" name="img" value="" onclick="ChangeText(this, 'txtPosterPath')">                    
+                </li>
+                <li>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnSaveMovieInfo">Save</button>                                           
+                    </div>                    
+                </li>
+            </ul>
+        </div>    
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>
