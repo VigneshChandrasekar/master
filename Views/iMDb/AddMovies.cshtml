@@ -13,11 +13,14 @@
     <link href="~/BannerControlTemplates/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="@Url.Content("~/Styles/Common.css")" media="screen" rel="stylesheet" type="text/css" />
     @Scripts.Render("~/bundles/jquery")
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>*@
+    <script src="~/Scripts/AngularJs/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.js"></script>*@
+    <script src="~/Scripts/AngularJs/angular.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>*@
+    <script src="~/Scripts/AngularJs/lodash.js"></script>
     <script src="~/Scripts/AngularJs/angularjs-dropdown-multiselect.js"></script>
     <script src="~/Scripts/AngularJs/MyApp.js"></script>
     @Scripts.Render("~/bundles/modernizr")
@@ -182,6 +185,7 @@
                 $("#hdnBtnTrigger").click();                
                 var movieName = $("#MovieName").val();
                 var plot = $("#Plot").val();
+                var videoURL = $("#VideoURL").val();
                 var releaseDate = $("#ReleaseDate").val();
                 var hdnActorText = $("#hdnActorText").val();
                 var hdnMCText = $("#hdnMCText").val();
@@ -230,6 +234,7 @@
                                             fd.append("plot", plot);
                                             fd.append("releaseDate", releaseDate);
                                             fd.append("posterPath", posterPath);
+                                            fd.append("videoURL", videoURL);
                                             fd.append("actorID", hdnActorText);
                                             fd.append("directorID", hdnDirectorText);
                                             fd.append("musicDirectorID", hdnMCText);
@@ -356,13 +361,18 @@
                         <span class="form_hint" id="snPlot">PLOT IS HERE...</span>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.VideoURL, "Video URL", new { @class = "control-label", @for = "text" })
+                        @Html.TextBoxFor(model => model.VideoURL, new { @class = "form-control", @placeholder = "Youtube video's web address", @type = "text" })                        
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-12">
                         @Html.LabelFor(model => model.Poster, "Poster", new { @class = "control-label", @for = "name" })
                         <input class="form-control" id="txtPosterPath" placeholder="Please Choose the poster image" type="text">
                         <img id="btnUploadFile" style="width:25px;height:25px;" src="~/Images/Icons/Folder-Searches.png" onclick="javascript: document.getElementById('imgFile').click();" />
-                        <input id="imgFile" style="visibility:hidden;" type="file" name="img" value="" onclick="ChangeText(this, 'txtPosterPath');" required>                        
+                        <input id="imgFile" style="visibility:hidden;" type="file" name="img" value="" onchange="ChangeText(this, 'txtPosterPath');" required>                        
                     </div>
                 </div>
 
@@ -496,7 +506,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddActor" onclick="SaveInfo(1);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddActor" onclick="SaveInfo(1);">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -553,7 +563,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddProducer" onclick="SaveInfo(2);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddProducer" onclick="SaveInfo(2);">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -609,7 +619,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddMC" onclick="SaveInfo(3);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddMC" onclick="SaveInfo(3);">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -666,7 +676,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddDirector" onclick="SaveInfo(4);" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddDirector" onclick="SaveInfo(4);">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
