@@ -88,39 +88,39 @@
                 var btnEditModalID = "btnEditModal" + item.MovieID.ToString();
                 var btnEditSaveID = "btnEditSave" + item.MovieID.ToString();
                 var videoRenderTagID = "VideoRenderTagID" + item.MovieID.ToString();
-                <div class="col-lg-6 divList" id="@item.MovieID">
+                <div class="col-sm-6  col-lg-6 divList" id="@item.MovieID">
                     <div id="primaryDiv" class="row">
-                        <div class="col-lg-4 divImage">
+                        <div class="col-sm-4  col-lg-4 divImage">
                             <img src="@ViewData[movieID]" class="movieTag" alt="Poster not available" />
                             <div class="middle">
                                 <div class="text"><img src="~/Images/Icons/Button_3-512.png" height="50" width="50" data-toggle="modal" data-target="#@videoRenderTagID" /></div>
                             </div>
                         </div>
-                        <div class="col-lg-8">
+                        <div class="col-sm-8 col-lg-8">
                             <br />
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Name</span></div>
-                                <div class="col-lg-8">@item.MovieName</div>
+                                <div class="col-sm-4 col-lg-4"><span>Name</span></div>
+                                <div class="col-sm-8  col-lg-8">@item.MovieName</div>
                             </div>
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Year</span></div>
-                                <div class="col-lg-8">@item.Release_Date</div>
+                                <div class="col-sm-4 col-lg-4"><span>Year</span></div>
+                                <div class="col-sm-8 col-lg-8">@item.Release_Date</div>
                             </div>
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Actors</span></div>
-                                <div class="col-lg-8">@item.ActorName</div>
+                                <div class="col-sm-4 col-lg-4"><span>Actors</span></div>
+                                <div class="col-sm-8 col-lg-8">@item.ActorName</div>
                             </div>
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Director</span></div>
-                                <div class="col-lg-8">@item.DirectorName</div>
+                                <div class="col-sm-4 col-lg-4"><span>Director</span></div>
+                                <div class="col-sm-8 col-lg-8">@item.DirectorName</div>
                             </div>
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Music Director</span></div>
-                                <div class="col-lg-8">@item.MusicDirectorName</div>
+                                <div class="col-sm-4 col-lg-4"><span>Music Director</span></div>
+                                <div class="col-sm-8 col-lg-8">@item.MusicDirectorName</div>
                             </div>
                             <div class="row divMovieGrid">
-                                <div class="col-lg-4"><span>Producer</span></div>
-                                <div class="col-lg-8">@item.ProducerName</div>
+                                <div class="col-sm-4 col-lg-4"><span>Producer</span></div>
+                                <div class="col-sm-8 col-lg-8">@item.ProducerName</div>
                             </div>
                             <div class="row">
                                 <a class="btn btn-primary btnEdit" id="@btnEditModalID" data-toggle="modal" data-target="#@divEditModalID" style="background-color:white;color:black;">Edit</a>
@@ -249,7 +249,7 @@
                                         xhr.addEventListener("load", function (event) {
                                             debugger;
                                             alert(event.target.response);
-                                        }, false);
+                                        }, false);                                        
                                     }
                                 }
                             }

@@ -16,11 +16,22 @@
     border:inset;
     
 }
+
+@media screen and (min-width: 1200px) {
+    .movieTag {
+        width: 180px;
+        height: 240px;
+        border: inset;
+        border-color: black;
+    }
+}
+@media screen and (max-width: 1200px) {
 .movieTag{
-    width:180px;
+    width:160px;
     height:240px;
     border:inset;
     border-color:black;    
+}
 }
 .btnEdit
 {            

@@ -150,6 +150,7 @@
         /* change the form hint arrow color when valid */
     </style>
     <script>
+        
         $(document).ready(function () {
             debugger;
             $("#MovieName").change(function () {
@@ -190,7 +191,7 @@
                 var hdnActorText = $("#hdnActorText").val();
                 var hdnMCText = $("#hdnMCText").val();
                 var hdnDirectorText = $("#hdnDirectorText").val();
-                var ddlProducerID = $("#ProducerID option:selected").val()
+                var hdnProducerText = $("#hdnProducerText").val();                
                 if (movieName.length == 0) {                    
                     $("#snMovieName").text("Please fill out this field.");
                     $("#snMovieName").show();
@@ -221,7 +222,7 @@
                                     }
                                     else {
                                         $("#snhdnDirectorText").hide();
-                                        if (ddlProducerID == 0) {
+                                        if (hdnProducerText.length == 0) {
                                             $("#snProducerText").show();
                                         }
                                         else {
@@ -238,7 +239,7 @@
                                             fd.append("actorID", hdnActorText);
                                             fd.append("directorID", hdnDirectorText);
                                             fd.append("musicDirectorID", hdnMCText);
-                                            fd.append("producerID", ddlProducerID);
+                                            fd.append("producerID", hdnProducerText);
                                             xhr.open("POST", "/iMDb/SaveMovieInfo/", true);
                                             xhr.send(fd);
                                             xhr.addEventListener("load", function (event) {
@@ -265,7 +266,7 @@
                 document.getElementById(sTargetID).value = oFileInput.value;
         }
         function SaveInfo(state) {
-            debugger;
+            debugger;            
             var actorName = $("#txtName").val();
             var actorGender = $("#txtGender").val();
             var actorDOB = $("#txtDateOfBirth").val();
@@ -298,7 +299,15 @@
                 },
                 success: function (data) {
                     debugger;
-                    alert(data);
+                    if (state == 1)
+                        $("#hdnActorBtnTrigger").click();
+                    else if (state == 4)
+                        $("#hdnDirectorBtnTrigger").click();
+                    else if (state == 3)
+                        $("#hdnMCBtnTrigger").click();
+                    else if (state = 2)
+                        $("#hdnProducerBtnTrigger").click();
+                    alert(data);                    
                 },
                 async: true,
                 processData: false
@@ -306,7 +315,7 @@
         }        
     </script>
 </head>
-<body style="background-color:dimgrey;">
+<body style="background-color:dimgrey;"  ng-app="MyApp" ng-controller="multiselectdropdown">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
@@ -334,7 +343,7 @@
             </div>
         </div>
     </nav>
-    <div id="wrapper" class="container" style="background-color:lightgray;border:outset;" ng-app="MyApp" ng-controller="multiselectdropdown">
+    <div id="wrapper" class="container" style="background-color:lightgray;border:outset;">
 
         <figure class="page-head-image">
             <img src="~/Images/Movies.jpg" style="max-height:150px;max-width:250px;" />
@@ -386,9 +395,9 @@
                 <br />
                 <div class="form-group container">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6">                                                                                    
                             <div ng-dropdown-multiselect="" extra-settings="dropdownSetting"
-                                 options="Actors" selected-model="ActorsSelected" checkboxes="true">
+                                 options="Actors" selected-model="ActorsSelected" checkboxes="true" id="divMultiSelectActor">
                             </div>                            
                             <input type="text" ng-model="hdnActorText" id="hdnActorText" style="visibility:hidden;">
                             <span class="form_hint" id="snhdnActorText">Please select the actor</span>
@@ -401,12 +410,11 @@
                 <br />
                 <div class="form-group container">
                     <div class="row">
-                        <div class="col-md-6">
-                            @Html.DropDownListFor(
-                        x => x.ProducerID,
-                        new SelectList(Model.iProducers, "ProducerID", "ProducerName"),
-                        "-- Please select --", new { @class = "btn btn-default" }
-                        )
+                        <div class="col-md-6">                                                        
+                            <select ng-model="selected" ng-options="b for b in Producers" ng-change="GetSelectedItem(selected)" class="form-control">
+                                <option value="">-- Please select the producer --</option>
+                            </select>                            
+                            <input type="text" ng-model="hdnProducerText" id="hdnProducerText" style="display:none;"/>                                                                       
                             <span class="form_hint" id="snProducerText">Please select the producer</span>                            
                         </div>
                         <div class="col-md-6">
@@ -504,9 +512,10 @@
                                 <span class="form_hint">ACTOR's BIO...</span>                       
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddActor" onclick="SaveInfo(1);">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddActor" onclick="SaveInfo(1);">Save</button>                                                                        
+                        <button type="submit" id="hdnActorBtnTrigger" ng-click="refreshActorList()" style="visibility:hidden;">Trigger Event</button>                                                
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -563,7 +572,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddProducer" onclick="SaveInfo(2);">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddProducer" onclick="SaveInfo(2);">Save</button>                        
+                        <button type="submit" id="hdnProducerBtnTrigger" ng-click="refreshProducerList()" style="visibility:hidden;">Trigger Event</button>                                                
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -620,6 +630,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="btnAddMC" onclick="SaveInfo(3);">Save</button>
+                        <button type="submit" id="hdnMCBtnTrigger" ng-click="refreshMCList()" style="visibility:hidden;">Trigger Event</button>                                                
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -676,7 +687,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAddDirector" onclick="SaveInfo(4);">Save</button>
+                        <button type="button" class="btn btn-success" id="btnAddDirector" onclick="SaveInfo(4);">Save</button>                        
+                        <button type="submit" id="hdnDirectorBtnTrigger" ng-click="refreshDirectorList()" style="visibility:hidden;">Trigger Event</button>                                                
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
